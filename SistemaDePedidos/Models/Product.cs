@@ -29,5 +29,10 @@ namespace Models
             return this.Price * 1.21;
         }
 
+        public override string ToString()
+        {
+            return $"Name = {Name}, Price = {Price}, Desc = {Desc}";
+        }
+
     }
 }

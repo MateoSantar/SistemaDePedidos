@@ -34,6 +34,15 @@ namespace Repository
             Guardar(archivo, datos);
         }
 
+        public static void Eliminar(string archivo, int index)
+        {
+            var datos = Cargar(archivo);
+
+            datos.RemoveAt(index);
+
+            Guardar(archivo, datos);
+        }
+
         public static void Actualizar(string archivo, Predicate<T> predicado, T nuevaEntidad)
         {
             var datos = Cargar(archivo);
@@ -48,13 +57,27 @@ namespace Repository
             }
         }
 
+        public static void Actualizar(string archivo, int index, T nuevaEntidad)
+        {
+            var datos = Cargar(archivo);
+            
+            if (index != -1)
+            {
+                datos[index] = nuevaEntidad;
+
+                Guardar(archivo, datos);
+            }
+        }
+
+
+
         private static void Guardar(string archivo, List<T> datos)
         {
             try
             {
                 string json = JsonSerializer.Serialize(datos, options);
 
-                File.WriteAllText($"{archivo}.json", json);
+                File.WriteAllText($"../../../Repository/Data/" + archivo+".json", json);
             }
             catch (IOException ex)
             {
@@ -67,7 +90,6 @@ namespace Repository
             try
             {
                 string path = "../../../Repository/Data/"+archivo+".json";
-
                 if (!File.Exists(path)) return new List<T>();
 
                 string json = File.ReadAllText(path);

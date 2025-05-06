@@ -39,7 +39,7 @@ namespace Controllers
         {
             for (int i = 0; i < orderList.Count; i++)
             {
-                OrderView.ShowMsg("Order N* " + i+1);
+                OrderView.ShowMsg("Order N* " + (i+1));
                 cController.ShowClient(orderList[i].client);
                 pController.ShowProductList(orderList[i].getProductList());
             }
@@ -47,24 +47,34 @@ namespace Controllers
 
         public void UpdateOrder()
         {
-            ShowOrders();
-            OrderView.ShowMsg("Orden a modificar: ");
-            Order order = orderList[int.Parse(Console.ReadLine()) - 1];
-            OrderView.ShowMsg("1. Cliente");
-            OrderView.ShowMsg("2. Lista de Productos");
-            OrderView.ShowMsg("Que desea actualizar de la orden: ");
-            switch (Console.ReadLine())
+            try
             {
-                case "1":
-                    order.client = cController.LoadClient();
-                    OrderView.ShowMsg("Actualizado!");
-                    break;
-                case "2":
-                    order.setProductList(pController.LoadProductList());
-                    OrderView.ShowMsg("Actualizado!");
-                    break;
-                default:
-                    break;
+                ShowOrders();
+                OrderView.ShowMsg("Orden a modificar (Indice): ");
+                int index = int.Parse(Console.ReadLine()) - 1;
+                Order order = orderList[index];
+                OrderView.ShowMsg("1. Cliente");
+                OrderView.ShowMsg("2. Lista de Productos");
+                OrderView.ShowMsg("Que desea actualizar de la orden: ");
+                string option = Console.ReadLine();
+                switch (option)
+                {
+                    case "1":
+                        order.client = cController.LoadClient();
+                        OrderView.ShowMsg("Actualizado!");
+                        break;
+                    case "2":
+                        order.setProductList(pController.LoadProductList());
+                        OrderView.ShowMsg("Actualizado!");
+                        break;
+                    default:
+                        break;
+                }
+                        Repository<Order>.Actualizar("ordenes", index, order);
+            }
+            catch (ArgumentOutOfRangeException exc)
+            {
+                Console.WriteLine("Error: No hay una orden en ese indice");
             }
 
         }
@@ -73,7 +83,10 @@ namespace Controllers
         {
             ShowOrders();
             OrderView.ShowMsg("Orden a eliminar: ");
-            orderList.RemoveAt(int.Parse(Console.ReadLine())-1);
+            int index = int.Parse(Console.ReadLine()) - 1;
+            orderList.RemoveAt(index);
+            Repository<Order>.Eliminar("ordenes", index);
+            Console.WriteLine("Eliminado!");
         }
 
 

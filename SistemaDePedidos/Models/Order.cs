@@ -9,7 +9,7 @@ namespace Models
     public class Order
     {
         public Client client { get; set; }
-        public List<Product> productList = new List<Product>();
+        public List<Product> productList { get; set; } = new List<Product>();
 
         public Order()
         {
@@ -47,5 +47,19 @@ namespace Models
         {
             this.productList = list;
         }
+
+        public override string ToString()
+        {
+            string returned = $"Client = {client.Name} ";
+            returned += "Products: ";
+            foreach (Product  p in productList)
+            {
+                returned += p;
+            }
+
+            return returned;
+        }
+
+       
     }
 }
